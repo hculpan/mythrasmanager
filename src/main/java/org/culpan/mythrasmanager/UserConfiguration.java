@@ -1,7 +1,5 @@
 package org.culpan.mythrasmanager;
 
-import org.dizitart.no2.Nitrite;
-
 import java.io.File;
 
 public class UserConfiguration {

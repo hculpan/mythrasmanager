@@ -24,9 +24,12 @@ import org.culpan.mythrasmanager.model.MythrasCombatant;
 import org.culpan.mythrasmanager.model.TemplateEntry;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -169,17 +172,11 @@ public class MonsterTemplatesDialogController {
     public void handleFetchList(ActionEvent actionEvent) {
         try {
             URL website = new URL("http://skoll.xyz/mythras_eg/index_json/");
-/*            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
             FileOutputStream fos = null;
             fos = new FileOutputStream(new File(UserConfiguration.getInstance().getDataDir(), TEMPLATES_FILE));
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            loadTemplateList();*/
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<TemplateEntry> templateEntries = objectMapper.readValue(website, new TypeReference<List<TemplateEntry>>(){});
-            for (TemplateEntry templateEntry : templateEntries) {
-                System.out.println(templateEntry);
-            }
-
+            loadTemplateList();
         } catch (IOException e) {
             e.printStackTrace();
         }
