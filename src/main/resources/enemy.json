@@ -1,0 +1,241 @@
+[
+  {
+    "features":[
+
+    ],
+    "theism_spells":[
+
+    ],
+    "cult_rank":"None",
+    "mysticism_spells":[
+
+    ],
+    "attributes":{
+      "action_points":2,
+      "damage_modifier":"+1d2",
+      "strike_rank":"10(10-0)",
+      "magic_points":9,
+      "movement":"4m (15\u2019)"
+    },
+    "hit_locations":[
+      {
+        "ap":1,
+        "range":"01-03",
+        "hp":6,
+        "name":"Right leg"
+      },
+      {
+        "ap":1,
+        "range":"04-06",
+        "hp":6,
+        "name":"Left leg"
+      },
+      {
+        "ap":1,
+        "range":"07-09",
+        "hp":7,
+        "name":"Abdomen"
+      },
+      {
+        "ap":1,
+        "range":"10-12",
+        "hp":8,
+        "name":"Chest"
+      },
+      {
+        "ap":1,
+        "range":"13-15",
+        "hp":5,
+        "name":"Right Arm"
+      },
+      {
+        "ap":1,
+        "range":"16-18",
+        "hp":5,
+        "name":"Left Arm"
+      },
+      {
+        "ap":1,
+        "range":"19-20",
+        "hp":6,
+        "name":"Head"
+      }
+    ],
+    "spirits":[
+
+    ],
+    "combat_styles":[
+      {
+        "weapons":[
+          {
+            "ap":6,
+            "add_damage_modifier":true,
+            "name":"Ball & Chain",
+            "type":"1h-melee",
+            "range":"",
+            "hp":8,
+            "reach":"M",
+            "damage":"1d6+1",
+            "effects":"Bash, Entangle, Stun Loc",
+            "size":"M"
+          },
+          {
+            "ap":2,
+            "add_damage_modifier":true,
+            "name":"Whip",
+            "type":"1h-melee",
+            "range":"",
+            "hp":8,
+            "reach":"VL",
+            "damage":"0",
+            "effects":"Stun Loc, Entangle",
+            "size":"M"
+          },
+          {
+            "ap":6,
+            "add_damage_modifier":true,
+            "name":"Longsword",
+            "type":"1h-melee",
+            "range":"",
+            "hp":12,
+            "reach":"L",
+            "damage":"1d8",
+            "effects":"Bleed, Impale",
+            "size":"M"
+          },
+          {
+            "ap":4,
+            "add_damage_modifier":true,
+            "name":"Shortspear",
+            "type":"1h-melee",
+            "range":"",
+            "hp":5,
+            "reach":"L",
+            "damage":"1d8+1",
+            "effects":"Impale",
+            "size":"M"
+          },
+          {
+            "ap":4,
+            "add_damage_modifier":true,
+            "name":"Halberd",
+            "type":"2h-melee",
+            "range":"",
+            "hp":10,
+            "reach":"VL",
+            "damage":"1d8+2",
+            "effects":"Impale, Sunder",
+            "size":"L"
+          },
+          {
+            "ap":4,
+            "add_damage_modifier":true,
+            "name":"Pike",
+            "type":"2h-melee",
+            "range":"",
+            "hp":12,
+            "reach":"VL",
+            "damage":"1d10+2",
+            "effects":"Impale",
+            "size":"L"
+          },
+          {
+            "ap":4,
+            "add_damage_modifier":true,
+            "name":"Long bow",
+            "type":"ranged",
+            "range":"15/125/250",
+            "hp":7,
+            "reach":"-",
+            "damage":"1d8",
+            "effects":"Impale",
+            "size":"H"
+          },
+          {
+            "ap":4,
+            "add_damage_modifier":true,
+            "name":"Target Shield",
+            "type":"shield",
+            "range":"",
+            "hp":9,
+            "reach":"S",
+            "damage":"1d3+1",
+            "effects":"Bash, Impale, Passive Block 3 loc's",
+            "size":"L"
+          }
+        ],
+        "name":"Hobgoblin Warrior (2 or 3 weapons)",
+        "value":66
+      }
+    ],
+    "cults":[
+
+    ],
+    "stats":[
+      {
+        "STR":14
+      },
+      {
+        "CON":15
+      },
+      {
+        "SIZ":15
+      },
+      {
+        "DEX":12
+      },
+      {
+        "INT":9
+      },
+      {
+        "POW":9
+      },
+      {
+        "CHA":5
+      }
+    ],
+    "name":"Hobgoblin, male warrior 1",
+    "folk_spells":[
+
+    ],
+    "skills":[
+      {
+        "Athletics":66
+      },
+      {
+        "Brawn":69
+      },
+      {
+        "Deceit":44
+      },
+      {
+        "Endurance":70
+      },
+      {
+        "Evade":54
+      },
+      {
+        "Languages (Goblin, Hobgoblin, Orcish, Carnivorous Ape, 20% also Common)":54
+      },
+      {
+        "Passion: Evil (Cannibalistic, Cruel, and Slaver)":48
+      },
+      {
+        "Passion: Evil (Hate Elves)":53
+      },
+      {
+        "Perception":48
+      },
+      {
+        "Unarmed":56
+      },
+      {
+        "Willpower":48
+      }
+    ],
+    "notes":"Armor: -2 to Initiative. If equipped, new AP is 3 in both legs and arms, 4 in adbomen/chest and head. The natural armor is already applied.\n\nAverage Lair: 90-900. One quarter of this number will be male warriors. Hobgoblin females and young are typically non-combatants.\n\nTreasure Type: B, Cx5, (M)\n\nAbilities:\n\nInfravision: The creature sees into the infrared spectrum. The maximum distance is 18 metres (60 ft) unless specified otherwise. \n\nTunnel Sense: Possess the ability to detect certain underground phenomena by succeeding at an Easy Perception skill roll. This Perception test may be further augmented by Lore (Mineral). Tunnel Sense may be used to detect stonework pits, deadfalls and traps, a slope or grade, approximate depth underground, new tunnel or passage construction, and shifting or sliding walls or rooms. The range of this detection is limited to 3 metres (10 feet).",
+    "sorcery_spells":[
+
+    ]
+  }
+]

@@ -1,0 +1,64 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+def embeddedJRE = true
+def libsDir = 'build/libs'
+def mainClassName = 'org.culpan.mythrasmanager.Main'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+dependencies {
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+    compile 'org.dizitart:nitrite:3.0.2'
+}
+
+task javapackager(type: Exec, dependsOn: [assemble]) {
+    def nativeType = ''
+    if (System.properties['os.name'].toLowerCase().contains('windows'))
+        nativeType = 'msi'
+    if (System.properties['os.name'].toLowerCase().contains('mac'))
+        nativeType = 'dmg'
+    if (System.properties['os.name'].toLowerCase().contains('linux'))
+        nativeType = 'rpm'
+
+    def dependencies = 'mythrasmanager-all.jar'
+
+    def paramEmbeddedJRE = embeddedJRE ? [] : ['-Bruntime=']
+
+    workingDir project.projectDir
+    commandLine = [
+            'javapackager',
+            '-deploy',
+            '-nosign',
+            '-native', nativeType,
+            '-outdir', 'build/distribution',
+            '-outfile', project.name,
+            '-name', 'Mythras Manager',
+            '-appclass', mainClassName,
+            '-srcdir', libsDir,
+            '-srcfiles', dependencies
+    ] + paramEmbeddedJRE
+}

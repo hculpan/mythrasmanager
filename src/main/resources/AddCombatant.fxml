@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="291.0" prefWidth="245.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.culpan.mythrasmanager.controllers.AddCombatantController">
+   <children>
+      <Button fx:id="cancelButton" layoutX="172.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="61.0" text="Cancel" />
+      <Button fx:id="okButton" layoutX="106.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="61.0" text="Ok" />
+      <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="27.0" prefHeight="17.0" prefWidth="50.0" text="Name" />
+      <TextField fx:id="textfieldName" layoutX="73.0" layoutY="22.0" prefHeight="27.0" prefWidth="160.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="63.0" prefWidth="50.0" text="INT" />
+      <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="99.0" prefWidth="50.0" text="DEX" />
+      <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="127.0" prefHeight="46.0" prefWidth="50.0" text="Action Points" textAlignment="RIGHT" wrapText="true" />
+      <Label alignment="CENTER_RIGHT" layoutX="-1.0" layoutY="187.0" prefHeight="17.0" prefWidth="61.0" text="Initiative" />
+      <Spinner fx:id="spinnerInt" layoutX="73.0" layoutY="58.0" prefHeight="27.0" prefWidth="160.0" />
+      <Spinner fx:id="spinnerDex" layoutX="73.0" layoutY="94.0" prefHeight="27.0" prefWidth="160.0" />
+      <TextField fx:id="textfieldActionPoints" disable="true" editable="false" layoutX="73.0" layoutY="137.0" prefHeight="27.0" prefWidth="160.0" text="2" />
+      <TextField fx:id="textfieldInitiative" disable="true" editable="false" layoutX="73.0" layoutY="182.0" prefHeight="27.0" prefWidth="160.0" text="10" />
+      <CheckBox fx:id="checkboxNpc" layoutX="97.0" layoutY="221.0" mnemonicParsing="false" text="NPC" />
+      <Label fx:id="validationError" alignment="CENTER" layoutX="73.0" layoutY="6.0" prefHeight="17.0" prefWidth="160.0" textFill="#f52020">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
