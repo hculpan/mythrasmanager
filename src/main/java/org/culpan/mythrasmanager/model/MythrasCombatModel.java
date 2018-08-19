@@ -14,7 +14,7 @@ public class MythrasCombatModel {
     protected boolean combatStarted = false;
 
     public void sortByInitiative() {
-        combatants.sort(Comparator.comparingInt(MythrasCombatant::getInitiative).reversed());
+        combatants.sort(Comparator.comparingInt(MythrasCombatant::getCurrentInitiative).reversed());
     }
 
     public boolean contains(String name) {

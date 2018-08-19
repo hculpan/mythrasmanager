@@ -65,6 +65,8 @@ public class MythrasCombatant {
 
     public int initiative;
 
+    public int currentInitiative;
+
     public int intelligence;
 
     public int dexterity;
@@ -84,6 +86,7 @@ public class MythrasCombatant {
         this.actionPoints = actionPoints;
         this.currentActionPoints = actionPoints;
         this.initiative = initiative;
+        this.currentInitiative = initiative;
     }
 
     public MythrasCombatant(String name, int actionPoints, int currentActionPoints, int initiative) {
@@ -91,6 +94,7 @@ public class MythrasCombatant {
         this.actionPoints = actionPoints;
         this.currentActionPoints = currentActionPoints;
         this.initiative = initiative;
+        this.currentInitiative = initiative;
     }
 
     public void nextRound() {
@@ -108,6 +112,7 @@ public class MythrasCombatant {
 
     public void calculateAttributes(int intelligence, int dexterity) {
         initiative = calculateInitiative(intelligence, dexterity);
+        currentInitiative = initiative;
         actionPoints = calculateActionPoints(intelligence, dexterity);
         currentActionPoints = actionPoints;
     }
@@ -154,7 +159,6 @@ public class MythrasCombatant {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(name);
     }
 
@@ -184,6 +188,7 @@ public class MythrasCombatant {
 
     public void setInitiative(int initiative) {
         this.initiative = initiative;
+        this.currentInitiative = initiative;
     }
 
     public int getIntelligence() {
@@ -212,5 +217,13 @@ public class MythrasCombatant {
 
     public void setNpc(boolean npc) {
         this.npc = npc;
+    }
+
+    public int getCurrentInitiative() {
+        return currentInitiative;
+    }
+
+    public void setCurrentInitiative(int currentInitiative) {
+        this.currentInitiative = currentInitiative;
     }
 }

@@ -49,6 +49,8 @@ public class Main extends Application {
 
     private Text statusText;
 
+    private Text roundText;
+
     private ListView<MythrasCombatant> listView;
 
     private Button nextRoundButton;
@@ -61,18 +63,61 @@ public class Main extends Application {
 
     private Random random = new Random();
 
+    private int askForInitiative(MythrasCombatant m) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Initiative Roll");
+        dialog.setHeaderText("Add initiative for " + m.getName());
+        dialog.setContentText("Enter the initiative roll:");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            try {
+                return Integer.parseInt(result.get());
+            } catch (NumberFormatException n) {
+                return 0;
+            }
+        };
+        return 0;
+    }
+
     @SuppressWarnings("unused")
     private Parent leftPane(int formWidth, int formHeight) {
         listView = new ListView<>();
         listView.setLayoutX(13);
         listView.setLayoutY(42);
-        listView.setPrefWidth(288);
+        listView.setPrefWidth(488);
         listView.setPrefHeight(446);
         listView.setStyle("-fx-background-insets: 0; -fx-padding: 0;");
         listView.setCellFactory(listView1 -> {
             ListCell<MythrasCombatant> result = new CombatListCellItem(mythrasCombatModel);
-//            result.setPrefHeight(34);
             return result;
+        });
+
+        final ContextMenu tableContextMenu = new ContextMenu();
+        MenuItem damageMenuItem = new MenuItem("Add to Initiative");
+        damageMenuItem.setOnAction( e -> {
+            MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
+            if (m != null) {
+                int n = askForInitiative(m);
+                m.setCurrentInitiative(m.getInitiative() + n);
+                mythrasCombatModel.sortByInitiative();
+                listView.refresh();
+            }
+        });
+        MenuItem healMenuItem = new MenuItem("Make Initiative Roll");
+        healMenuItem.setOnAction( e -> {
+            MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
+            if (m != null) {
+                m.setCurrentInitiative(m.getInitiative() + random.nextInt(10) + 1);
+                mythrasCombatModel.sortByInitiative();
+                listView.refresh();
+            }
+        });
+        tableContextMenu.getItems().addAll(damageMenuItem, healMenuItem);
+        listView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY && listView.getSelectionModel().getSelectedItem() != null) {
+                tableContextMenu.show(listView, t.getScreenX(), t.getScreenY());
+            }
         });
 
         Button addButton = new Button();
@@ -105,7 +150,7 @@ public class Main extends Application {
         });
 
         Button editButton = new Button();
-        editButton.setLayoutX(117);
+        editButton.setLayoutX(212);
         editButton.setLayoutY(5);
         editButton.setPrefHeight(25);
         editButton.setPrefWidth(75);
@@ -140,7 +185,7 @@ public class Main extends Application {
         });
 
         Button removeButton = new Button();
-        removeButton.setLayoutX(233);
+        removeButton.setLayoutX(425);
         removeButton.setLayoutY(5);
         removeButton.setPrefHeight(25);
         removeButton.setPrefWidth(75);
@@ -155,7 +200,7 @@ public class Main extends Application {
         mythrasCombatModel.sortByInitiative();
         listView.setItems(mythrasCombatModel.combatants);
 
-        Rectangle rectangle3 = new Rectangle(8, 38, 300, 454);
+        Rectangle rectangle3 = new Rectangle(8, 38, 500, 454);
         rectangle3.setArcHeight(20);
         rectangle3.setArcWidth(20);
         rectangle3.setFill(Color.WHITE);
@@ -168,15 +213,16 @@ public class Main extends Application {
         startCombatButton.setPrefWidth(100);
         startCombatButton.setOnAction( (ActionEvent actionEvent) -> {
             if (mythrasCombatModel.combatants.size() == 0) return;
-            mythrasCombatModel.startCombat();
             nextRoundButton.setDisable(false);
             startCombatButton.setDisable(true);
             resetCombatButton.setDisable(false);
-            listView.refresh();
+            initiativeForAll();
+            mythrasCombatModel.startCombat();
+            roundText.setText("Round " + mythrasCombatModel.getCombatRound());
         });
 
         nextRoundButton = new Button("Next Round");
-        nextRoundButton.setLayoutX(110);
+        nextRoundButton.setLayoutX(118);
         nextRoundButton.setLayoutY(500);
         nextRoundButton.setPrefHeight(25);
         nextRoundButton.setPrefWidth(100);
@@ -184,21 +230,30 @@ public class Main extends Application {
         nextRoundButton.setOnAction( (ActionEvent actionEvent) -> {
             mythrasCombatModel.nextRound();
             listView.refresh();
+            roundText.setText("Round " + mythrasCombatModel.getCombatRound());
         });
 
         resetCombatButton = new Button("Stop Combat");
-        resetCombatButton.setLayoutX(212);
+        resetCombatButton.setLayoutX(228);
         resetCombatButton.setLayoutY(500);
         resetCombatButton.setPrefHeight(25);
         resetCombatButton.setPrefWidth(100);
         resetCombatButton.setDisable(true);
         resetCombatButton.setOnAction( (ActionEvent actionEvent) -> {
             mythrasCombatModel.stopCombat();
-            listView.refresh();
             startCombatButton.setDisable(false);
             nextRoundButton.setDisable(true);
             resetCombatButton.setDisable(true);
+            resetInitiative();
+            roundText.setText("");
         });
+
+        roundText = new Text();
+        roundText.setLayoutX(378);
+        roundText.setLayoutY(520);
+        roundText.setTextAlignment(TextAlignment.CENTER);
+        roundText.setFill(Color.BLACK);
+        roundText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
         statusText = new Text();
         statusText.setLayoutX(8);
@@ -208,12 +263,12 @@ public class Main extends Application {
         statusText.setFont(Font.font("Arial", FontWeight.BOLD, 11));
 
         FlowPane topButtons = new FlowPane();
-        topButtons.setPadding(new Insets(5, 10, 10, 10));
-        topButtons.setHgap(36);
+        topButtons.setPadding(new Insets(5, 10, 10, 23));
+        topButtons.setHgap(120);
         topButtons.getChildren().addAll(addButton, editButton, removeButton);
         topButtons.setPrefWidth(540);
 
-        return new Group(rectangle3, topButtons, listView, statusText, startCombatButton, nextRoundButton, resetCombatButton);
+        return new Group(rectangle3, topButtons, listView, statusText, startCombatButton, nextRoundButton, resetCombatButton, roundText);
     }
 
     protected void drawSkillText(GraphicsContext gc, int y, String level, int value, int roll) {
@@ -290,7 +345,7 @@ public class Main extends Application {
 
     protected Parent buildSkillPercentage() {
         HBox hBoxSkillPercent = new HBox();
-        hBoxSkillPercent.setSpacing(25);
+        hBoxSkillPercent.setSpacing(15);
 
         Label textSkillPercent = new Label("Skill percentage:");
         textSkillPercent.setPadding(new Insets(5, 0, 0, 0));
@@ -330,7 +385,7 @@ public class Main extends Application {
         hitLocationTableView = new TableView<>();
 
         listView.getSelectionModel().selectedItemProperty().addListener( e -> {
-            MythrasCombatant m = (MythrasCombatant)listView.getSelectionModel().getSelectedItem();
+            MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
             if (m != null) {
                 hitLocationTableView.setItems(FXCollections.observableArrayList(m.hitLocations));
             }
@@ -428,17 +483,17 @@ public class Main extends Application {
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.TOP_LEFT);
-        gridPane.add(leftPane(320, 540), 0, 0);
-        gridPane.add(rightPane(320, 540), 1, 0);
-        gridPane.getColumnConstraints().add(new ColumnConstraints(320));
-        gridPane.getColumnConstraints().add(new ColumnConstraints(320));
+        gridPane.add(leftPane(520, 540), 0, 0);
+        gridPane.add(rightPane(520, 540), 1, 0);
+        gridPane.getColumnConstraints().add(new ColumnConstraints(520));
+        gridPane.getColumnConstraints().add(new ColumnConstraints(520));
 
-        Rectangle rectangle2 = new Rectangle(0, 0, 640, 540);
+        Rectangle rectangle2 = new Rectangle(0, 0, 1040, 540);
         rectangle2.setFill(Color.rgb(199, 206, 213));
 
         Group masterGroup = new Group(addMenu(), rectangle2, gridPane);
 
-        Scene scene = new Scene(masterGroup, 640, 540);
+        Scene scene = new Scene(masterGroup, 1040, 540);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Mythras Manager");
@@ -497,7 +552,7 @@ public class Main extends Application {
     protected void openCombatData() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Combat Information");
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Mythras Combat Files", "*.myci"),
                 new FileChooser.ExtensionFilter("JSON", "*.json"),
@@ -607,6 +662,23 @@ public class Main extends Application {
             listView.refresh();
         });
 
+        MenuItem menuResetInitForAll = new MenuItem("Reset All Initiatives");
+        menuResetInitForAll.setOnAction( event -> {
+            resetInitiative();
+        });
+
+        MenuItem menuRollInitForNpcs = new MenuItem("Roll Initiative for All NPCs");
+        menuRollInitForNpcs.setOnAction( event -> {
+            mythrasCombatModel.combatants.filtered(m -> m.isNpc()).forEach(m -> m.setCurrentInitiative(m.getInitiative() + random.nextInt(10) + 1));
+            mythrasCombatModel.sortByInitiative();
+            listView.refresh();
+        });
+
+        MenuItem menuInitForAll = new MenuItem("Initiative for All Combatants");
+        menuInitForAll.setOnAction( event -> {
+            initiativeForAll();
+        });
+
         CheckMenuItem menuShowInitiative = new CheckMenuItem("Show Initiative");
         menuShowInitiative.setSelected(UserConfiguration.getInstance().isShowInitiative());
         menuShowInitiative.setOnAction( event -> {
@@ -617,9 +689,29 @@ public class Main extends Application {
 
         menuFile.getItems().addAll(openCombat, saveCombat, saveAsCombat, new SeparatorMenuItem(), menuTemplates);
 
-        menuCombatant.getItems().addAll(menuResetActionPoints, menuDeleteCombatant, menuDeleteNpcs, new SeparatorMenuItem(), menuShowInitiative);
+        menuCombatant.getItems().addAll(menuResetActionPoints, menuDeleteCombatant, menuDeleteNpcs,
+                new SeparatorMenuItem(), menuInitForAll, menuRollInitForNpcs, menuResetInitForAll, menuShowInitiative);
 
         return menuBar;
+    }
+
+    private void resetInitiative() {
+        mythrasCombatModel.combatants.forEach(m -> m.setCurrentInitiative(m.getInitiative()));
+        mythrasCombatModel.sortByInitiative();
+        listView.refresh();
+    }
+
+    private void initiativeForAll() {
+        for (MythrasCombatant m : mythrasCombatModel.combatants) {
+            if (m.isNpc()) {
+                m.setCurrentInitiative(m.getInitiative() + random.nextInt(10) + 1);
+            } else {
+                int n = askForInitiative(m);
+                m.setCurrentInitiative(m.getInitiative() + n);
+            }
+        }
+        mythrasCombatModel.sortByInitiative();
+        listView.refresh();
     }
 
 

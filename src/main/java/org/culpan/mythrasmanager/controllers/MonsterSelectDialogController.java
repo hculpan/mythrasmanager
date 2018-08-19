@@ -101,7 +101,8 @@ public class MonsterSelectDialogController {
                         hitLocation.setName(location.get("name").asText());
                         m.hitLocations.add(hitLocation);
                     }
-                    m.initiative = (int)Math.round(((double)m.intelligence + (double)m.dexterity) / 2);
+                    m.initiative = MythrasCombatant.calculateInitiative(m.intelligence, m.dexterity);
+                    m.currentInitiative = m.initiative;
                     monsters.add(m);
                 }
                 tableMonsters.setItems(monsters);

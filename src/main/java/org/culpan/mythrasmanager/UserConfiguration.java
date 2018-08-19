@@ -9,7 +9,7 @@ public class UserConfiguration {
 
     protected String lastSavedPath;
 
-    protected boolean showInitiative = false;
+    protected boolean showInitiative = true;
 
     public static UserConfiguration getInstance() {
         if (instance == null) {

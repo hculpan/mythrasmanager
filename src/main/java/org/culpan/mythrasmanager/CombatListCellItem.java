@@ -35,7 +35,11 @@ public class CombatListCellItem extends ListCell {
 
             String combatantText = m.name;
             if (UserConfiguration.getInstance().isShowInitiative()) {
-                combatantText += " [" + m.initiative + "]";
+                if (m.currentInitiative == m.initiative) {
+                    combatantText += " [--/" + m.initiative + "]";
+                } else {
+                    combatantText += " [" + m.currentInitiative + "/" + m.initiative + "]";
+                }
             }
             Text text = new Text(combatantText);
             if (m.currentActionPoints > 0) {
@@ -87,7 +91,10 @@ public class CombatListCellItem extends ListCell {
             canvas.setHeight(30);
             canvas.setWidth(40);
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            if (m.hasActionPoints()) {
+            if (m.hasActionPoints() && m.isNpc()) {
+                gc.setFill(Color.LIGHTSALMON);
+                gc.setStroke(Color.BLACK);
+            } else if (m.hasActionPoints()) {
                 gc.setFill(Color.LIGHTGREEN);
                 gc.setStroke(Color.BLACK);
             } else {
@@ -106,7 +113,7 @@ public class CombatListCellItem extends ListCell {
             group.add(holdButton, 5, 0);
             group.getColumnConstraints().add(new ColumnConstraints(10));
             group.getColumnConstraints().add(new ColumnConstraints(30));
-            group.getColumnConstraints().add(new ColumnConstraints(145));
+            group.getColumnConstraints().add(new ColumnConstraints(345));
             group.getColumnConstraints().add(new ColumnConstraints(25));
             group.getColumnConstraints().add(new ColumnConstraints(25));
             group.getColumnConstraints().add(new ColumnConstraints(25));
