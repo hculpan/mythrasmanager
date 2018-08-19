@@ -112,7 +112,7 @@ public class CombatListCellItem extends ListCell {
             group.add(reactButton, 4, 0);
             group.add(holdButton, 5, 0);
             group.getColumnConstraints().add(new ColumnConstraints(10));
-            group.getColumnConstraints().add(new ColumnConstraints(30));
+            group.getColumnConstraints().add(new ColumnConstraints(35));
             group.getColumnConstraints().add(new ColumnConstraints(345));
             group.getColumnConstraints().add(new ColumnConstraints(25));
             group.getColumnConstraints().add(new ColumnConstraints(25));
