@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class MythrasCombatant {
     public static class HitLocation {
+        public enum WoundLevel { None, Minor, Serious, Major }
+
         private int armorPoints;
 
         private String range;
@@ -15,6 +17,10 @@ public class MythrasCombatant {
         private int currentHitPoints;
 
         private String name;
+
+        private String wound = "";
+
+        private String effect = "";
 
         public int getArmorPoints() {
             return armorPoints;
@@ -55,6 +61,46 @@ public class MythrasCombatant {
         public void setCurrentHitPoints(int currentHitPoints) {
             this.currentHitPoints = currentHitPoints;
         }
+
+        public String getWound() {
+            return wound;
+        }
+
+        public void setWound(String wound) {
+            this.wound = wound;
+        }
+
+        public String getEffect() {
+            return effect;
+        }
+
+        public void setEffect(String effect) {
+            this.effect = effect;
+        }
+
+        public void calculateWound() {
+            if (getHitPoints() == getCurrentHitPoints()) {
+                wound = "";
+                effect = "";
+            } else if (getCurrentHitPoints() > 0) {
+                wound = "minor";
+                effect = "";
+            } else if (getCurrentHitPoints() > getHitPoints() * -1) {
+                wound = "serious";
+                if (name.contains("arm") || name.contains("leg")) {
+                    effect = "Endurance test or becomes useless";
+                } else {
+                    effect = "Endurance test or lose consciousness";
+                }
+            } else {
+                wound = "major";
+                if (name.contains("arm") || name.contains("leg")) {
+                    effect = "Limb is severed or shattered; drop prone and make Endurance to stay conscious";
+                } else {
+                    effect = "Unconscious; make Endurance test or immediately die";
+                }
+            }
+        }
     }
 
     public String name;
@@ -65,6 +111,8 @@ public class MythrasCombatant {
 
     public int initiative;
 
+    public int armorPenalty;
+
     public int currentInitiative;
 
     public int intelligence;
@@ -74,6 +122,8 @@ public class MythrasCombatant {
     public boolean npc = false;
 
     public boolean acting = false;
+
+    private String rawJsonFile;
 
     public List<HitLocation> hitLocations = new ArrayList<>();
 
@@ -102,8 +152,8 @@ public class MythrasCombatant {
         acting = false;
     }
 
-    static public int calculateInitiative(int intelligence, int dexterity) {
-        return (int)Math.round(((double)intelligence + (double)dexterity) / 2);
+    static public int calculateInitiative(int intelligence, int dexterity, int armorPenalty) {
+        return (int)Math.round(((double)intelligence + (double)dexterity) / 2) - armorPenalty;
     }
 
     static public int calculateActionPoints(int intelligence, int dexterity) {
@@ -111,7 +161,7 @@ public class MythrasCombatant {
     }
 
     public void calculateAttributes(int intelligence, int dexterity) {
-        initiative = calculateInitiative(intelligence, dexterity);
+        initiative = calculateInitiative(intelligence, dexterity, armorPenalty);
         currentInitiative = initiative;
         actionPoints = calculateActionPoints(intelligence, dexterity);
         currentActionPoints = actionPoints;
@@ -145,6 +195,8 @@ public class MythrasCombatant {
         result.intelligence = this.intelligence;
         result.dexterity = this.dexterity;
         result.npc = this.npc;
+        result.armorPenalty = this.armorPenalty;
+        result.rawJsonFile = this.rawJsonFile;
         result.calculateAttributes();
         return result;
     }
@@ -225,5 +277,21 @@ public class MythrasCombatant {
 
     public void setCurrentInitiative(int currentInitiative) {
         this.currentInitiative = currentInitiative;
+    }
+
+    public int getArmorPenalty() {
+        return armorPenalty;
+    }
+
+    public void setArmorPenalty(int armorPenalty) {
+        this.armorPenalty = armorPenalty;
+    }
+
+    public String getRawJsonFile() {
+        return rawJsonFile;
+    }
+
+    public void setRawJsonFile(String rawJsonFile) {
+        this.rawJsonFile = rawJsonFile;
     }
 }

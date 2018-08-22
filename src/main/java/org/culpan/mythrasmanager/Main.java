@@ -30,10 +30,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.culpan.mythrasmanager.controllers.AddCombatantController;
+import org.culpan.mythrasmanager.controllers.CreatureViewController;
 import org.culpan.mythrasmanager.controllers.DamageHitLocationController;
 import org.culpan.mythrasmanager.controllers.MonsterTemplatesDialogController;
 import org.culpan.mythrasmanager.model.MythrasCombatModel;
 import org.culpan.mythrasmanager.model.MythrasCombatant;
+import org.culpan.mythrasmanager.utils.DiceRoller;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -192,8 +194,8 @@ public class Main extends Application {
         removeButton.setText("Remove");
         removeButton.setOnAction( (ActionEvent actionEvent) -> {
             MythrasCombatant mythrasCombatant;
-            if ((mythrasCombatant = (MythrasCombatant)listView.getSelectionModel().getSelectedItem()) != null) {
-                mythrasCombatModel.combatants.remove(mythrasCombatant);
+            if ((mythrasCombatant = listView.getSelectionModel().getSelectedItem()) != null) {
+                deleteCombatant(mythrasCombatant);
             }
         });
 
@@ -280,32 +282,32 @@ public class Main extends Application {
             gc.setTextAlign(TextAlignment.CENTER);
             if ((roll == 100) || (roll == 99 && value < 100)) {
                 gc.setFill(Color.RED);
-                gc.fillText(String.format("%d > %d", roll, value), 155, y);
+                gc.fillText(String.format("%d > %d", roll, value), 135, y);
             } else if (roll <= value) {
                 gc.setFill(Color.BLACK);
-                gc.fillText(String.format("%d <= %d", roll, value), 155, y);
+                gc.fillText(String.format("%d <= %d", roll, value), 135, y);
             } else {
                 gc.setFill(Color.DARKGRAY);
-                gc.fillText(String.format("%d > %d", roll, value), 155, y);
+                gc.fillText(String.format("%d > %d", roll, value), 135, y);
             }
             int crit = (int)Math.ceil((double)value * 0.1);
             if ((roll == 100) || (roll == 99 && value < 100)) {
                 gc.setFill(Color.RED);
-                gc.fillText(String.format("%d > %d", roll, value), 255, y);
+                gc.fillText(String.format("%d > %d", roll, value), 205, y);
             } else if (roll <= crit) {
                 gc.setFill(Color.BLACK);
-                gc.fillText(String.format("%d <= %d", roll, crit), 255, y);
+                gc.fillText(String.format("%d <= %d", roll, crit), 205, y);
             } else {
                 gc.setFill(Color.DARKGRAY);
-                gc.fillText(String.format("%d > %d", roll, crit), 255, y);
+                gc.fillText(String.format("%d > %d", roll, crit), 205, y);
             }
         } else {
             gc.setFill(Color.BLACK);
             gc.setTextAlign(TextAlignment.RIGHT);
             gc.fillText(level, 75, y);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(String.format("%d", value), 155, y);
-            gc.fillText(String.format("%d", (int)Math.ceil((double)value * 0.1)), 255, y);
+            gc.fillText(String.format("%d", value), 135, y);
+            gc.fillText(String.format("%d", (int)Math.ceil((double)value * 0.1)), 205, y);
         }
     }
 
@@ -313,22 +315,22 @@ public class Main extends Application {
         GraphicsContext gc = skillPercentCanvas.getGraphicsContext2D();
         gc.setFill(Color.WHITE);
         gc.setStroke(color);
-        gc.fillRoundRect(0, 0, 304, 125, 20, 20);
-        gc.strokeRoundRect(0, 0, 304, 125, 20, 20);
+        gc.fillRoundRect(0, 0, 254, 125, 20, 20);
+        gc.strokeRoundRect(0, 0, 254, 125, 20, 20);
         gc.setFill(Color.LIGHTCYAN);
-        gc.fillRoundRect(2, 3, 300, 15, 20, 20);
-        gc.fillRect(2, 13, 300, 8);
+        gc.fillRoundRect(2, 3, 250, 15, 20, 20);
+        gc.fillRect(2, 13, 250, 8);
         gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(2, 22, 300, 19);
+        gc.fillRect(2, 22, 250, 19);
         gc.setFill(Color.LIGHTGRAY);
-        gc.fillRect(2, 42, 300, 20);
+        gc.fillRect(2, 42, 250, 20);
         gc.setFill(Color.YELLOW);
-        gc.fillRect(2, 63, 300, 19);
+        gc.fillRect(2, 63, 250, 19);
         gc.setFill(Color.LIGHTSALMON);
-        gc.fillRect(2, 84, 300, 19);
+        gc.fillRect(2, 84, 250, 19);
         gc.setFill(Color.LIGHTPINK);
-        gc.fillRect(2, 104, 300, 12);
-        gc.fillRoundRect(2, 111, 300, 11, 20, 20);
+        gc.fillRect(2, 104, 250, 12);
+        gc.fillRoundRect(2, 111, 250, 11, 20, 20);
         try {
             int number = Integer.parseInt(value);
             drawSkillText(gc, 16, "Very Easy", number * 2, roll);
@@ -347,7 +349,7 @@ public class Main extends Application {
         HBox hBoxSkillPercent = new HBox();
         hBoxSkillPercent.setSpacing(15);
 
-        Label textSkillPercent = new Label("Skill percentage:");
+        Label textSkillPercent = new Label("Skill %:");
         textSkillPercent.setPadding(new Insets(5, 0, 0, 0));
         textSkillPercent.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 
@@ -356,7 +358,7 @@ public class Main extends Application {
         final Button buttonSkillPercent = new Button("Roll");
         buttonSkillPercent.setPrefWidth(75);
         final Canvas canvasSkillPercent = new Canvas();
-        canvasSkillPercent.setWidth(304);
+        canvasSkillPercent.setWidth(254);
         canvasSkillPercent.setHeight(125);
         drawSkillPercentage(textFieldSkillPercent.getText(), 0, canvasSkillPercent);
 
@@ -378,9 +380,10 @@ public class Main extends Application {
     }
 
     protected Parent rightPane(int formWidth, int formHeight) {
-        VBox result = new VBox();
+        GridPane result = new GridPane();
         result.setPadding(new Insets(6, 0, 0, 0));
-        result.setSpacing(10);
+        result.setHgap(10);
+        result.setVgap(10);
 
         hitLocationTableView = new TableView<>();
 
@@ -409,7 +412,15 @@ public class Main extends Application {
         colCurrentHp.setCellValueFactory( new PropertyValueFactory<>("currentHitPoints"));
         colCurrentHp.setPrefWidth(55);
         colCurrentHp.setStyle( "-fx-alignment: CENTER;");
-        hitLocationTableView.getColumns().addAll(colRange, colName, colAp, colHp, colCurrentHp);
+        TableColumn<MythrasCombatant.HitLocation, Integer> colWound = new TableColumn<>("Wound");
+        colWound.setCellValueFactory( new PropertyValueFactory<>("wound"));
+        colWound.setPrefWidth(55);
+        colWound.setStyle( "-fx-alignment: CENTER;");
+        TableColumn<MythrasCombatant.HitLocation, Integer> colEffect = new TableColumn<>("Effect");
+        colEffect.setCellValueFactory( new PropertyValueFactory<>("effect"));
+        colEffect.setPrefWidth(145);
+        colEffect.setStyle( "-fx-alignment: CENTER;");
+        hitLocationTableView.getColumns().addAll(colRange, colName, colAp, colHp, colCurrentHp, colWound, colEffect);
         hitLocationTableView.setEditable(true);
 
         final ContextMenu tableContextMenu = new ContextMenu();
@@ -419,6 +430,7 @@ public class Main extends Application {
             if (hitLocation != null) {
                 int damage = hitLocationDamageDialog(hitLocation);
                 hitLocation.setCurrentHitPoints(hitLocation.getCurrentHitPoints() - damage);
+                hitLocation.calculateWound();
                 hitLocationTableView.refresh();
             }
         });
@@ -427,12 +439,13 @@ public class Main extends Application {
             MythrasCombatant.HitLocation hitLocation = hitLocationTableView.getSelectionModel().getSelectedItem();
             if (hitLocation != null) {
                 hitLocation.setCurrentHitPoints(hitLocation.getHitPoints());
+                hitLocation.calculateWound();
                 hitLocationTableView.refresh();
             }
         });
         tableContextMenu.getItems().addAll(damageMenuItem, healMenuItem);
         hitLocationTableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
-            if(t.getButton() == MouseButton.SECONDARY) {
+            if(t.getButton() == MouseButton.SECONDARY || t.isControlDown()) {
                 tableContextMenu.show(hitLocationTableView, t.getScreenX(), t.getScreenY());
             }
         });
@@ -440,7 +453,7 @@ public class Main extends Application {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.setPrefWidth(304);
-        tabPane.setMaxWidth(304);
+        tabPane.setMaxWidth(504);
         tabPane.setMinHeight(317);
         tabPane.setPrefHeight(317);
 
@@ -448,9 +461,71 @@ public class Main extends Application {
         hitLocationsTab.setContent(hitLocationTableView);
         tabPane.getTabs().add(hitLocationsTab);
 
-        result.getChildren().addAll(buildSkillPercentage(), tabPane);
+        result.add(buildSkillPercentage(), 0, 0);
+        result.add(tabPane, 0, 1, 2, 1);
+
+        GridPane diceGridPane = new GridPane();
+        diceGridPane.setVgap(2);
+        diceGridPane.getRowConstraints().addAll(
+            new RowConstraints(28),
+            new RowConstraints(28),
+            new RowConstraints(28),
+            new RowConstraints(28),
+            new RowConstraints(28)
+        );
+
+        Rectangle rectangle3 = new Rectangle(0, 0, 237, 157);
+        rectangle3.setArcHeight(20);
+        rectangle3.setArcWidth(20);
+        rectangle3.setFill(Color.WHITE);
+        rectangle3.setStroke(color);
+        rectangle3.toBack();
+        diceGridPane.add(rectangle3, 0, 0, 1, 5);
+
+        buildDiceRoller(diceGridPane, 0);
+        buildDiceRoller(diceGridPane, 1);
+        buildDiceRoller(diceGridPane, 2);
+        buildDiceRoller(diceGridPane, 3);
+        buildDiceRoller(diceGridPane, 4);
+
+        result.add(diceGridPane, 1, 0);
+
+        result.getColumnConstraints().add(new ColumnConstraints(254));
+        result.getColumnConstraints().add(new ColumnConstraints(245));
+        GridPane.setMargin(diceGridPane, new Insets(10, 0, 0, 0));
 
         return result;
+    }
+
+    private void buildDiceRoller(GridPane gridPane, int rowIndex) {
+        HBox result = new HBox();
+        result.setSpacing(15);
+
+        final TextField diceTextField = new TextField();
+        diceTextField.setMaxWidth(100);
+        final Text diceResultText = new Text();
+        HBox.setMargin(diceResultText, new Insets(5, 0, 0, 0));
+
+        Button rollButton = new Button("->");
+
+        diceTextField.setOnAction( e -> rollDice(diceTextField, diceResultText));
+        rollButton.setOnAction(e -> rollDice(diceTextField, diceResultText));
+
+        result.getChildren().addAll(diceTextField, rollButton, diceResultText);
+
+        gridPane.add(result, 0, rowIndex);
+        GridPane.setMargin(result, new Insets(0, 0, 0, 5));
+    }
+
+    private void rollDice(TextField diceTextField, Text diceResultText) {
+        if (!diceTextField.getText().isEmpty()) {
+            DiceRoller diceRoller = new DiceRoller(diceTextField.getText());
+            try {
+                diceResultText.setText(Integer.toString(diceRoller.roll()));
+            } catch (Exception ex) {
+                diceResultText.setText(ex.getLocalizedMessage());
+            }
+        }
     }
 
     protected int hitLocationDamageDialog(MythrasCombatant.HitLocation hitLocation) {
@@ -644,8 +719,7 @@ public class Main extends Application {
         menuDeleteCombatant.setOnAction( event -> {
             if (listView.getSelectionModel().getSelectedItem() != null) {
                 MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
-                mythrasCombatModel.combatants.remove(m);
-                listView.refresh();
+                deleteCombatant(m);
             }
         });
 
@@ -687,12 +761,44 @@ public class Main extends Application {
             listView.refresh();
         });
 
+        MenuItem menuCreatureView = new MenuItem("View creature");
+        menuCreatureView.setAccelerator(new KeyCodeCombination(KeyCode.V, systemKey));
+        menuCreatureView.setOnAction( event -> {
+            MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
+            if (m != null && m.getRawJsonFile() != null) {
+                try {
+                    final FXMLLoader loader = new FXMLLoader(getClass().getResource("/CreatureView.fxml"));
+                    final Parent root;
+                    loader.setControllerFactory( f -> new CreatureViewController(m));
+                    root = loader.load();
+                    final Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setResizable(false);
+                    stage.setTitle("View " + m.getName());
+                    stage.setScene(scene);
+                    stage.showAndWait();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         menuFile.getItems().addAll(openCombat, saveCombat, saveAsCombat, new SeparatorMenuItem(), menuTemplates);
 
         menuCombatant.getItems().addAll(menuResetActionPoints, menuDeleteCombatant, menuDeleteNpcs,
+                new SeparatorMenuItem(), menuCreatureView,
                 new SeparatorMenuItem(), menuInitForAll, menuRollInitForNpcs, menuResetInitForAll, menuShowInitiative);
 
         return menuBar;
+    }
+
+    private void deleteCombatant(MythrasCombatant m) {
+        if (m.isActing()) {
+            mythrasCombatModel.nextCombatantToAct();
+        }
+        mythrasCombatModel.combatants.remove(m);
+        listView.refresh();
     }
 
     private void resetInitiative() {
@@ -716,6 +822,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+        if (args.length > 0) {
+            UserConfiguration.getInstance().setExternalCreatureTemplatePath(args[0]);
+        }
         launch(args);
     }
 }

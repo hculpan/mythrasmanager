@@ -1,5 +1,6 @@
 package org.culpan.mythrasmanager.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
@@ -8,10 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.culpan.mythrasmanager.UserConfiguration;
 import org.culpan.mythrasmanager.model.MythrasCombatant;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.Date;
 
 @SuppressWarnings("unused")
 public class MonsterSelectDialogController {
@@ -80,6 +83,7 @@ public class MonsterSelectDialogController {
                 for (JsonNode node : root) {
                     MythrasCombatant m = new MythrasCombatant();
                     m.name = node.path("name").asText();
+                    m.setRawJsonFile(persistRawJason(node, m.name));
                     m.actionPoints = node.path("attributes").path("action_points").asInt();
                     m.currentActionPoints = m.actionPoints;
                     m.setNpc(true);
@@ -101,7 +105,7 @@ public class MonsterSelectDialogController {
                         hitLocation.setName(location.get("name").asText());
                         m.hitLocations.add(hitLocation);
                     }
-                    m.initiative = MythrasCombatant.calculateInitiative(m.intelligence, m.dexterity);
+                    m.initiative = MythrasCombatant.calculateInitiative(m.intelligence, m.dexterity, m.armorPenalty);
                     m.currentInitiative = m.initiative;
                     monsters.add(m);
                 }
@@ -110,6 +114,22 @@ public class MonsterSelectDialogController {
         } catch (IOException e) {
 
         }
+    }
+
+    private String persistRawJason(JsonNode node, String name) {
+        try {
+            File jsonFile = new File(UserConfiguration.getInstance().getDataDir(), String.format("%s-%tY%<tm%<td%<tH%<tM%<tS.json", name, new Date()));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(node);
+            Writer out = new FileWriter(jsonFile);
+            out.write(json);
+            out.close();
+            return jsonFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @FXML

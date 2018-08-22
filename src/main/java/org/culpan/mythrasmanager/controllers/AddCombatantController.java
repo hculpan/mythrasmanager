@@ -27,6 +27,9 @@ public class AddCombatantController {
     private Spinner<Integer> spinnerDex;
 
     @FXML
+    private Spinner<Integer> spinnerArmorPenalty;
+
+    @FXML
     private CheckBox checkboxNpc;
 
     @FXML
@@ -46,6 +49,8 @@ public class AddCombatantController {
         spinnerDex.valueProperty().addListener( e -> spinnerUpdated());
         spinnerInt.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, 10));
         spinnerInt.valueProperty().addListener( e -> spinnerUpdated());
+        spinnerArmorPenalty.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99, 0));
+        spinnerArmorPenalty.valueProperty().addListener( e -> spinnerUpdated());
 
         if (mythrasCombatant != null && mythrasCombatant.name != null) {
             textfieldName.setText(mythrasCombatant.name);
@@ -53,6 +58,7 @@ public class AddCombatantController {
             textfieldInitiative.setText(Integer.toString(mythrasCombatant.initiative));
             spinnerInt.getValueFactory().setValue(mythrasCombatant.intelligence);
             spinnerDex.getValueFactory().setValue(mythrasCombatant.dexterity);
+            spinnerArmorPenalty.getValueFactory().setValue(mythrasCombatant.armorPenalty);
             checkboxNpc.selectedProperty().setValue(mythrasCombatant.isNpc());
             textfieldName.setEditable(false);
         }
@@ -75,11 +81,13 @@ public class AddCombatantController {
             mythrasCombatant.name = textfieldName.getText();
             mythrasCombatant.intelligence = spinnerInt.getValue().intValue();
             mythrasCombatant.dexterity = spinnerDex.getValue().intValue();
+            mythrasCombatant.armorPenalty = spinnerArmorPenalty.getValue().intValue();
             mythrasCombatant.setNpc(checkboxNpc.isSelected());
             mythrasCombatant.calculateAttributes();
         } else {
             mythrasCombatant.intelligence = spinnerInt.getValue().intValue();
             mythrasCombatant.dexterity = spinnerDex.getValue().intValue();
+            mythrasCombatant.armorPenalty = spinnerArmorPenalty.getValue().intValue();
             mythrasCombatant.setNpc(checkboxNpc.isSelected());
             mythrasCombatant.calculateAttributes();
         }
@@ -95,8 +103,8 @@ public class AddCombatantController {
     }
 
     public void spinnerUpdated() {
-        textfieldInitiative.setText(Integer.toString(MythrasCombatant.calculateInitiative(spinnerInt.getValue().intValue(), spinnerDex.getValue().intValue())));
-        textfieldActionPoints.setText(Integer.toString(MythrasCombatant.calculateActionPoints(spinnerInt.getValue().intValue(), spinnerDex.getValue().intValue())));
+        textfieldInitiative.setText(Integer.toString(MythrasCombatant.calculateInitiative(spinnerInt.getValue(), spinnerDex.getValue(), spinnerArmorPenalty.getValue())));
+        textfieldActionPoints.setText(Integer.toString(MythrasCombatant.calculateActionPoints(spinnerInt.getValue(), spinnerDex.getValue())));
     }
 
     public MythrasCombatant getMythrasCombatant() {

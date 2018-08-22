@@ -11,6 +11,8 @@ public class UserConfiguration {
 
     protected boolean showInitiative = true;
 
+    protected String externalCreatureTemplatePath;
+
     public static UserConfiguration getInstance() {
         if (instance == null) {
             instance = new UserConfiguration();
@@ -39,5 +41,13 @@ public class UserConfiguration {
 
     public void setShowInitiative(boolean showInitiative) {
         this.showInitiative = showInitiative;
+    }
+
+    public String getExternalCreatureTemplatePath() {
+        return externalCreatureTemplatePath;
+    }
+
+    public void setExternalCreatureTemplatePath(String externalCreatureTemplatePath) {
+        this.externalCreatureTemplatePath = externalCreatureTemplatePath;
     }
 }
