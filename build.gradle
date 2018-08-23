@@ -33,6 +33,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+    compile group: 'com.yuvimasory', name: 'orange-extensions', version: '1.3.0'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -53,6 +54,7 @@ task javapackager(type: Exec, dependsOn: [assemble]) {
     commandLine = [
             'javapackager',
             '-deploy',
+            '-Bicon=icon.icns',
             '-nosign',
             '-native', nativeType,
             '-outdir', 'build/distribution',

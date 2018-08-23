@@ -208,6 +208,30 @@
                 <br>
             </#if>
 
+            <span class="title">Combat Style:</span>
+
+            <#list combat_styles as combat_style>
+                <span class="item_list">${combat_style.name} ${combat_style.value}%</span>
+                <table class="weapon_table">
+                    <tr class="toprow"><th align="left">Weapon</th><th>Size/Force</th><th align="left">Reach</th><th align="left">Damage</th><th align="left">AP/HP</th><th align="left">Effects</th></tr>
+                    <#list combat_style.weapons as weapon>
+                        <#if weapon_index % 2 == 0>
+                            <tr class="oddrow">
+                        <#else>
+                            <tr class="evenrow">
+                        </#if>
+                        <td>${weapon.name}</td>
+                        <td align="center">${weapon.size}</td>
+                        <td align="center">${weapon.reach}</td>
+                        <td align="center">${weapon.damage}</td>
+                        <td align="center">${weapon.ap}/${weapon.hp}</td>
+                        <td>${weapon.effects}</td>
+                    </tr>
+                    </#list>
+                </table>
+            </#list>
+            <br>
+
             <span class="title">Skills:</span><span class="item_list">
             <#list skills as skill>
                 <#list skill?keys as k>
@@ -261,26 +285,6 @@
                 <br>
                 <br>
             </#if>
-
-            <span class="title">Combat Style:</span>
-
-            <#list combat_styles as combat_style>
-                <span class="item_list">${combat_style.name} ${combat_style.value}%</span>
-                <table class="weapon_table">
-                    <tr><th align="left">Weapon</th><th>Size/Force</th><th align="left">Reach</th><th align="left">Damage</th><th align="left">AP/HP</th><th align="left">Effects</th></tr>
-                    <#list combat_style.weapons as weapon>
-                    <tr>
-                        <td>${weapon.name}</td>
-                        <td align="center">${weapon.size}</td>
-                        <td align="center">${weapon.reach}</td>
-                        <td align="center">${weapon.damage}</td>
-                        <td align="center">${weapon.ap}/${weapon.hp}</td>
-                        <td>${weapon.effects}</td>
-                    </tr>
-                    </#list>
-                </table>
-            </#list>
-            <br>
 
             <#if features?has_content>
                 <span class="title">Features:</span><span class="item_list">
