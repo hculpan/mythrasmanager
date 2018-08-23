@@ -582,12 +582,8 @@ public class MainDialog {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Mythras Manager");
         primaryStage.resizableProperty().setValue(false);
-        if (System.getProperty("os.name").toLowerCase().indexOf("mac") > -1) {
-            URL iconURL = Main.class.getResource("/icon.png");
-            java.awt.Image image = new ImageIcon(iconURL).getImage();
-            com.apple.eawt.Application.getApplication().setDockIconImage(image);
-        } else {
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+        if (System.getProperty("os.name").toLowerCase().indexOf("mac") == -1) {
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon-master.png")));
         }
         primaryStage.show();
     }

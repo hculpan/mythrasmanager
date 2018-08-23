@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
     repositories {
         jcenter()
@@ -39,12 +41,16 @@ dependencies {
 
 task javapackager(type: Exec, dependsOn: [assemble]) {
     def nativeType = ''
-    if (System.properties['os.name'].toLowerCase().contains('windows'))
+    def iconFile = ''
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
         nativeType = 'msi'
-    if (System.properties['os.name'].toLowerCase().contains('mac'))
+        iconFile = 'win-icon.ico'
+    } else if (System.properties['os.name'].toLowerCase().contains('mac')) {
         nativeType = 'dmg'
-    if (System.properties['os.name'].toLowerCase().contains('linux'))
+        iconFile = 'mac-icon.icns'
+    } else  if (System.properties['os.name'].toLowerCase().contains('linux')) {
         nativeType = 'rpm'
+    }
 
     def dependencies = 'mythrasmanager-all.jar'
 
@@ -54,7 +60,7 @@ task javapackager(type: Exec, dependsOn: [assemble]) {
     commandLine = [
             'javapackager',
             '-deploy',
-            '-Bicon=icon.icns',
+            '-Bicon=' + iconFile,
             '-nosign',
             '-native', nativeType,
             '-outdir', 'build/distribution',
