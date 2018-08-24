@@ -1,9 +1,7 @@
 # Compiled class file
 *.class
 out
-build
 .DS_Store
-*.lock
 
 # Log file
 *.log
@@ -26,6 +24,13 @@ build
 *.zip
 *.tar.gz
 *.rar
+
+# GRadle wrapper
+!gradle-wrapper.jar
+.gradle
+/build/
+gradle-app.setting
+.gradletasknamecache
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
