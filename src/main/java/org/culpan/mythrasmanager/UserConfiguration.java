@@ -24,6 +24,9 @@ public class UserConfiguration {
     }
 
     public File getDataDir() {
+        if (!dataDir.exists()) {
+            dataDir.mkdirs();
+        }
         return dataDir;
     }
 
