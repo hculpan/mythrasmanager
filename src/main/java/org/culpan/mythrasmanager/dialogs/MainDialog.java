@@ -30,7 +30,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.culpan.mythrasmanager.CombatListCellItem;
-import org.culpan.mythrasmanager.Main;
 import org.culpan.mythrasmanager.UserConfiguration;
 import org.culpan.mythrasmanager.controllers.AddCombatantController;
 import org.culpan.mythrasmanager.controllers.CreatureViewController;
@@ -40,11 +39,9 @@ import org.culpan.mythrasmanager.model.MythrasCombatModel;
 import org.culpan.mythrasmanager.model.MythrasCombatant;
 import org.culpan.mythrasmanager.utils.DiceRoller;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -139,7 +136,7 @@ public class MainDialog {
         addButton.setPrefWidth(75);
         addButton.setText("Add");
         addButton.setOnAction( (ActionEvent actionEvent) -> {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddCombatant.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddCombatant.fxml"));
             final Parent root;
             try {
                 root = loader.load();
@@ -171,7 +168,7 @@ public class MainDialog {
             MythrasCombatant mythrasCombatant = null;
             if ((mythrasCombatant = (MythrasCombatant)listView.getSelectionModel().getSelectedItem()) != null) {
                 MythrasCombatant temp = (MythrasCombatant)mythrasCombatant.clone();
-                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddCombatant.fxml"));
+                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddCombatant.fxml"));
                 loader.setControllerFactory( f -> new AddCombatantController(temp));
                 final Parent root;
                 try {
@@ -541,7 +538,7 @@ public class MainDialog {
     protected int hitLocationDamageDialog(MythrasCombatant.HitLocation hitLocation) {
         int result = 0;
 
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/DamageHitLocation.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DamageHitLocation.fxml"));
         final Parent root;
         try {
             loader.setControllerFactory( f -> new DamageHitLocationController(hitLocation.getName(), hitLocation.getHitPoints(), hitLocation.getArmorPoints()));
@@ -740,7 +737,7 @@ public class MainDialog {
         menuTemplates.setAccelerator(new KeyCodeCombination(KeyCode.M, systemKey));
         menuTemplates.setOnAction( event -> {
             try {
-                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/monster_templates.fxml"));
+                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/monster_templates.fxml"));
                 final Parent root = loader.load();
                 final Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -827,7 +824,7 @@ public class MainDialog {
             MythrasCombatant m = listView.getSelectionModel().getSelectedItem();
             if (m != null && m.getRawJsonFile() != null) {
                 try {
-                    final FXMLLoader loader = new FXMLLoader(getClass().getResource("/CreatureView.fxml"));
+                    final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CreatureView.fxml"));
                     final Parent root;
                     loader.setControllerFactory( f -> new CreatureViewController(m));
                     root = loader.load();

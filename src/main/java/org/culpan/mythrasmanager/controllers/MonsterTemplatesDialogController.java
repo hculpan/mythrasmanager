@@ -1,6 +1,5 @@
 package org.culpan.mythrasmanager.controllers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.ListProperty;
@@ -189,7 +188,7 @@ public class MonsterTemplatesDialogController {
         if ((templateEntry = templateListView.getSelectionModel().getSelectedItem()) == null) return;
 
         try {
-            final FXMLLoader loader = new FXMLLoader(MonsterTemplatesDialogController.class.getResource("/monster_select.fxml"));
+            final FXMLLoader loader = new FXMLLoader(MonsterTemplatesDialogController.class.getResource("/fxml/monster_select.fxml"));
             loader.setControllerFactory( f ->
                 new MonsterSelectDialogController(templateEntry.getName(), templateEntry.getId().intValue())
             );
